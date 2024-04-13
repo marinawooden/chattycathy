@@ -22,7 +22,11 @@ from pathlib import Path
 import re
 
 # open image
+import requests
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
 from PIL import Image
+from io import BytesIO
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
@@ -53,8 +57,16 @@ class Cathy():
       ]
       self.role = role
 
-      img = Image.open('assets/barack.jpg')
-      img.show()
+      # make photo of subject
+      response = openai_client.images.generate(
+        model="dall-e-3",
+        prompt=f"Headshot of {role}",
+        size="1024x1024",
+        quality="standard",
+        n=1,
+      )
+
+      image_url = response.data[0].url
 
       print("Hello! You're talking to Chatty Cathy!")
 
